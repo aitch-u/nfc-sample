@@ -29,7 +29,7 @@ const writeUrl = async () => {
   try {
     // NFCタグにデータを書き込む
     const ndef = new NDEFReader();
-    await ndef.write(records: [{ recordType: "url", data: "https://google.com/" }]);
+    await ndef.write(records: [{ recordType: "url", data: "https://google.com/" }],);
     console.log("NFCタグにデータを書き込みました");
   } catch (error) {
     console.error("NFCタグへのデータ書き込みに失敗しました：", error);
