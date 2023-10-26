@@ -1,0 +1,49 @@
+<button onclick="readUrl()">読み込み</button>
+<button onclick="writeUrl()">書き込み</button>
+
+<script>
+const readUrl = async () => {
+  console.log("read")
+  if ('NDEFReader' in window) {
+    const ndefReader = new NDEFReader();
+    try {
+      // NFCリーダーを開始する
+      await ndefReader.scan();
+      console.log("NFCリーダーが起動しました");
+
+      // NFCタグが読み取られたときの処理
+      ndefReader.onreading = (event) => {
+        const message = event.message;
+        for (const record of message.records) {
+          alert("NFCタグを読み取りました：" + record);
+          console.log("NFCタグを読み取りました：", record);
+        }
+      };
+    } catch (error) {
+      console.error("NFCリーダーの起動に失敗しました：", error);
+    }
+  } else {
+    console.error("このブラウザではNFCをサポートしていません");
+  }
+}
+
+const writeUrl = async () => {
+  console.log("write")
+  if ('NDEFWriter' in window) {
+    const ndefWriter = new NDEFWriter();
+    const message = {
+      records: [{ recordType: "text", data: "https://google.com" }]
+    };
+
+    try {
+      // NFCタグにデータを書き込む
+      await ndefWriter.write(message);
+      console.log("NFCタグにデータを書き込みました");
+    } catch (error) {
+      console.error("NFCタグへのデータ書き込みに失敗しました：", error);
+    }
+  } else {
+    console.error("このブラウザではNFCをサポートしていません");
+  }
+}
+</script>
