@@ -17,7 +17,7 @@ const readUrl = async () => {
     ndef.addEventListener("reading", ({ message, serialNumber }) => {
       const record = message.records[0]
       const { data, recordType } = record      
-      if (recordType === 'url'( {
+      if (recordType === 'url') {
         const decoder = encoding ? new TextDecoder(encoding) : new TextDecoder();
         location.href = decoder.decode(data);
       }
