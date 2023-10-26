@@ -6,33 +6,28 @@ const readUrl = async () => {
   console.log("read")
   const ndefReader = new NDEFReader();
   try {
-    // NFCリーダーを開始する
-    await ndefReader.scan();
-    console.log("NFCリーダーが起動しました");
+    const ndef = new NDEFReader();
+    await ndef.scan();
+    console.log("> Scan started");
 
-    // NFCタグが読み取られたときの処理
-    ndefReader.onreading = (event) => {
-      const message = event.message;
-      for (const record of message.records) {
-        alert("NFCタグを読み取りました：" + record);
-        console.log("NFCタグを読み取りました：", record);
-      }
-    };
+    ndef.addEventListener("readingerror", () => {
+      console.log("Argh! Cannot read data from the NFC tag. Try another one?");
+    });
+
+    ndef.addEventListener("reading", ({ message, url }) => {
+      location.href = url;
+    });
   } catch (error) {
-    console.error("NFCリーダーの起動に失敗しました：", error);
+    console.log("Argh! " + error);
   }
 }
 
 const writeUrl = async () => {
   console.log("write")
-  const ndefWriter = new NDEFWriter();
-  const message = {
-    records: [{ recordType: "text", data: "https://google.com" }]
-  };
-
   try {
     // NFCタグにデータを書き込む
-    await ndefWriter.write(message);
+    const ndef = new NDEFReader();
+    await ndef.write("https://google.com");
     console.log("NFCタグにデータを書き込みました");
   } catch (error) {
     console.error("NFCタグへのデータ書き込みに失敗しました：", error);
